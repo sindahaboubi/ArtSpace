@@ -1,6 +1,8 @@
 package Util;
 
+import Entités.Commentaire;
 import Entités.OeuvreArtistique;
+import Services.CommentaireService;
 import Services.ServiceOeuvreArtistique;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -8,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 public class Test {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         //Connexion à la base de données
         Connection con1= DataSource.getInstance().getCon();
         System.out.println(con1);
@@ -61,5 +63,40 @@ public class Test {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        // Instantiate CommentaireService
+        CommentaireService commentaireService = new CommentaireService();
+        // Example usage: Adding a Commentaire
+        Commentaire commentaireToAdd = new Commentaire("Great arts-pace!", null, 1, 2);
+        commentaireService.addCommentaire(commentaireToAdd);
+        System.out.println("Added Commentaire: " + commentaireToAdd);
+
+        // Example usage: Getting all Commentaires
+        List<Commentaire> commentaires = commentaireService.getAllCommentaires();
+        for (Commentaire commentaire : commentaires) {
+            System.out.println(commentaire);
+        }
+        // Example usage: Updating a Commentaire (assuming the Commentaire with id 1 exists)
+        if (!commentaires.isEmpty()) {
+            Commentaire commentaireToUpdate = commentaires.get(0); // Assuming the first Commentaire in the list should be updated
+            commentaireToUpdate.setContent("Updated arts-pace comment!");
+            commentaireService.updateCommentaire(commentaireToUpdate);
+            System.out.println("Updated Commentaire: " + commentaireToUpdate);
+        } else {
+            System.out.println("No Commentaire to update.");
+        }
+// Example usage: Deleting a Commentaire (assuming there is at least one Commentaire in the list)
+if (!commentaires.isEmpty()) {
+
+    //Commentaire commentaireToDelete = commentaires.get(0); // Assuming the first Commentaire in the list should be deleted
+    Commentaire commentaireToDelete = new Commentaire();
+    commentaireToDelete.setId(17);
+    int commentToDeleteId = commentaireToDelete.getId();
+    commentaireService.deleteCommentaire(commentToDeleteId);
+    System.out.println("Deleted Commentaire with id: " + commentToDeleteId);
+} else {
+    System.out.println("No Commentaire to delete.");
+}
     }
+
+    
 }
