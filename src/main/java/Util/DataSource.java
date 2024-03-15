@@ -5,7 +5,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DataSource {
-    private   String url="jdbc:mysql://localhost:3306/ArtSpace";
+    //private   String url="jdbc:mysql://localhost:3306/ArtSpace";
+    private   String url="jdbc:mysql://localhost:8111/ArtSpace";
+
     private String login="root";
     private String pwd="";
     private static DataSource data;
