@@ -2,8 +2,7 @@ package Entités;
 
 import java.util.Date;
 
-public class
-Commentaire {
+public class Commentaire {
 
     private int id;
     private String content;
@@ -15,9 +14,8 @@ Commentaire {
     }
 
     // Constructor without id (for insertion where id is auto-generated)
-    public Commentaire(String content, Date dateCreation, int idOeuvre, int idClient) {
+    public Commentaire(String content, int idOeuvre, int idClient) {
         this.content = content;
-        this.dateCreation = dateCreation;
         this.idOeuvre = idOeuvre;
         this.idClient = idClient;
     }

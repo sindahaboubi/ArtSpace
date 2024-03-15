@@ -1,6 +1,7 @@
 package Services;
 
 import Entités.Commentaire;
+import Entités.OeuvreArtistique;
 import Util.DataSource;
 
 import java.sql.*;
@@ -9,48 +10,42 @@ import java.util.List;
 
 public class CommentaireService {
 
-    private Connection connection;
-
-    public CommentaireService() throws SQLException {
-        connection = DataSource.getConnection();
-    }
+    static Statement ste;
+    static Connection con;
 
     // Create
     // Create
-    public void addCommentaire(Commentaire commentaire) {
-        String query = "INSERT INTO commentaire (content, datecreation, idouevre, idclient) VALUES (?, ?, ?, ?)";
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, commentaire.getContent());
-            preparedStatement.setTimestamp(2, new Timestamp(System.currentTimeMillis())); // Assuming datecreation is a timestamp
-            preparedStatement.setInt(3, commentaire.getIdOeuvre());
-            preparedStatement.setInt(4, commentaire.getIdClient());
-            preparedStatement.executeUpdate();
 
-            // Retrieve the generated id and set it in the Commentaire object
-            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                commentaire.setId(generatedKeys.getInt(1));
-            }
+    public void ajouterCommentaire(Commentaire commentaire) throws SQLException {
+        try{
+            con = DataSource.getInstance().getCon();
+            ste = con.createStatement();
+            String req = "INSERT INTO commentaire(content, idOeuvre, idClient, dateCreation) VALUES ('" +
+                    commentaire.getContent() + "', " +
+                    commentaire.getIdOeuvre() + ", " +
+                    commentaire.getIdClient() + ", NOW()" +
+                    ")";
+
+            ste.executeUpdate(req);
+            System.out.println("Commentaire ajouté avec succès !");
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new SQLException("Erreur lors de l'ajout du comentaire: " + e.getMessage());
         }
     }
 
-
     // Read
-    public List<Commentaire> getAllCommentaires() {
+   public List<Commentaire> getAllCommentaires() throws SQLException {
         List<Commentaire> commentaires = new ArrayList<>();
         String query = "SELECT * FROM commentaire";
         try {
-            Statement statement = connection.createStatement();
+            Statement statement = con.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
             while (resultSet.next()) {
                 Commentaire commentaire = new Commentaire(
                         resultSet.getInt("id"),
                         resultSet.getString("content"),
                         resultSet.getTimestamp("datecreation"),
-                        resultSet.getInt("idouevre"),
+                        resultSet.getInt("idoeuvre"),
                         resultSet.getInt("idclient")
                 );
                 commentaires.add(commentaire);
@@ -62,26 +57,40 @@ public class CommentaireService {
     }
 
     // Update
-    public void updateCommentaire(Commentaire commentaire) {
-        String query = "UPDATE commentaire SET content=?, datecreation=?, idouevre=?, idclient=? WHERE id=?";
+        public void updateCommentaire(Commentaire commentaire) throws SQLException {
+        Connection conn = null;
+        Statement stmt = null;
+
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, commentaire.getContent());
-            preparedStatement.setTimestamp(2, new Timestamp(System.currentTimeMillis())); // Assuming datecreation is a timestamp
-            preparedStatement.setInt(3, commentaire.getIdOeuvre());
-            preparedStatement.setInt(4, commentaire.getIdClient());
-            preparedStatement.setInt(5, commentaire.getId());
-            preparedStatement.executeUpdate();
+            conn = DataSource.getInstance().getCon();
+            stmt = conn.createStatement();
+            String query = "UPDATE commentaire SET content = '" + commentaire.getContent() +
+                    "', idClient = '" + commentaire.getIdClient() +
+                    "', idOeuvre = " + commentaire.getIdOeuvre() +
+                    ", dateCreation = '" + new java.sql.Date(commentaire.getDateCreation().getTime()) +
+                    "' WHERE id = " + commentaire.getId();
+
+
+            stmt.executeUpdate(query);
+            System.out.println("Mise à jour effectuée avec succès !");
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Erreur lors de la mise à jour du commentaire : " + e.getMessage());
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
         }
     }
+
 
     // Delete
     public void deleteCommentaire(int id) {
         String query = "DELETE FROM commentaire WHERE id=?";
         try {
-            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
                 preparedStatement.setInt(1, id);
                 preparedStatement.executeUpdate();
             }
