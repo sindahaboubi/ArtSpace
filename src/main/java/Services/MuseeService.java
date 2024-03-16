@@ -9,14 +9,18 @@ import java.util.List;
 
 public class MuseeService {
 
-    private Connection connection;
-
-    public MuseeService() throws SQLException {
-        connection = DataSource.getConnection();
+    private Connection getConnection() {
+        return DataSource.getInstance().getCon();
     }
 
     // Create
     public void addMusee(Musee musee) {
+        Connection connection = getConnection(); // Obtain the connection
+        if (connection == null) {
+            // Handle the case where the connection is not initialized
+            System.err.println("Database connection is not initialized.");
+            return;
+        }
         String query = "INSERT INTO musee (nom, description, ville, dateDebut, dateFin, heureOuverture, heureFermeture, idArtiste) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -36,6 +40,8 @@ public class MuseeService {
 
     // Read
     public List<Musee> getAllMusees() {
+        Connection connection = getConnection(); // Obtain the connection
+
         List<Musee> musees = new ArrayList<>();
         String query = "SELECT * FROM musee";
         try {
@@ -63,6 +69,8 @@ public class MuseeService {
 
     // Update
     public void updateMusee(Musee musee) {
+        Connection connection = getConnection(); // Obtain the connection
+
         String query = "UPDATE musee SET nom=?, description=?, ville=?, dateDebut=?, dateFin=?, heureOuverture=?, heureFermeture=?, idArtiste=? WHERE id=?";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -83,6 +91,8 @@ public class MuseeService {
 
     // Delete
     public void deleteMusee(int id) {
+        Connection connection = getConnection(); // Obtain the connection
+
         String query = "DELETE FROM musee WHERE id=?";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
