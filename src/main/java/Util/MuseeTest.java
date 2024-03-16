@@ -14,7 +14,7 @@ public class MuseeTest extends Application {
     public void start(Stage primaryStage) throws Exception {
         // Load the FXML file
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Musee/AjoutMusee.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Musee/ConsulterMusee.fxml"));
         Parent root = loader.load();
 
         // Set up the scene

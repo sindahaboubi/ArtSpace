@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.Musee.ConsulterMusee">
+   <children>
+      <AnchorPane layoutX="3.0" layoutY="2.0" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: &quot;F7EEDD&quot;;">
+         <children>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#008dda" height="346.0" layoutX="-15.0" layoutY="54.0" stroke="#008dda" strokeType="INSIDE" width="133.0" />
+            <Button layoutX="6.0" layoutY="132.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="103.0" style="-fx-background-color: &quot;ACE2E1&quot;;" text="Acceuil">
+               <font>
+                  <Font name="Book Antiqua Bold Italic" size="12.0" />
+               </font>
+            </Button>
+            <Button layoutX="6.0" layoutY="200.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="103.0" style="-fx-background-color: &quot;ACE2E1&quot;;" text="Musee">
+               <font>
+                  <Font name="Book Antiqua Bold Italic" size="12.0" />
+               </font>
+            </Button>
+            <Button fx:id="AjouterMusee" layoutX="514.0" layoutY="76.0" mnemonicParsing="false" onAction="#handleAjouterMusee" prefHeight="30.0" prefWidth="73.0" style="-fx-background-color: &quot;41C9E2&quot;;" text="Ajouter" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#41c9e2" height="61.0" layoutX="-5.0" layoutY="-7.0" stroke="#41c9e2" strokeType="INSIDE" width="616.0" />
+            <Text fill="WHITE" layoutX="15.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ArtSpace">
+               <font>
+                  <Font name="Bookman Old Style Bold" size="29.0" />
+               </font>
+            </Text>
+            <Button layoutX="6.0" layoutY="264.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="103.0" style="-fx-background-color: &quot;ACE2E1&quot;;" text="Oeuvre">
+               <font>
+                  <Font name="Book Antiqua Bold Italic" size="12.0" />
+               </font>
+            </Button>
+             <TableView fx:id="TableMusee" layoutX="129.0" layoutY="118.0" prefHeight="260.0" prefWidth="462.0" style="-fx-background-color: white;" onMouseClicked="#handleTableViewClick">
+                 <columns>
+                     <TableColumn fx:id="nomColumn" prefWidth="53.5999755859375" text="Nom" />
+                     <TableColumn fx:id="descriptionColumn" prefWidth="78.39997863769531" text="Description" />
+                     <TableColumn fx:id="villeColumn" prefWidth="47.20001220703125" text="Ville" />
+                     <TableColumn fx:id="dateDebutColumn" prefWidth="71.20001220703125" text="Date debut" />
+                     <TableColumn fx:id="dateFinColumn" prefWidth="58.39996337890625" text="Date fin" />
+                     <TableColumn fx:id="heureOuvertureColumn" prefWidth="75.20001220703125" text="Ouverture" />
+                     <TableColumn fx:id="heureFermetureColumn" prefWidth="79.20001220703125" text="Fermeture" />
+                 </columns>
+             </TableView>
+
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>
