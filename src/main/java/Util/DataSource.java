@@ -1,12 +1,13 @@
 package Util;
 
-import java.sql.Connection;
+import com.mysql.jdbc.Connection;
+
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DataSource {
     //private   String url="jdbc:mysql://localhost:3306/ArtSpace";
-    private   String url="jdbc:mysql://localhost:8111/ArtSpace";
+    private   String url="jdbc:mysql://localhost:3306/ArtSpace";
 
     private String login="root";
     private String pwd="";
@@ -16,7 +17,7 @@ public class DataSource {
     private DataSource(){
 
         try {
-            con= DriverManager.getConnection(url,login,pwd);
+            con= (Connection) DriverManager.getConnection(url,login,pwd);
             System.out.println("Connexion établie");
         } catch (SQLException e) {
             System.out.println(e);
@@ -36,4 +37,16 @@ public class DataSource {
     public static Connection getConnection() {
         return null;
     }
+
+    public void closeConnection() {
+        try {
+            if (con != null && !con.isClosed()) {
+                con.close();
+                System.out.println("Connexion fermée");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la fermeture de la connexion : " + e.getMessage());
+        }
+    }
+
 }

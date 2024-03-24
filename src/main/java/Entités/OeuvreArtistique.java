@@ -1,5 +1,6 @@
 package Entités;
 
+import java.util.Arrays;
 import java.util.Date;
 
 public class OeuvreArtistique {
@@ -13,8 +14,12 @@ public class OeuvreArtistique {
     private int idCategorie;
     private int idMusee;
     private int acceptation;
+    private byte[] image;
 
-    public OeuvreArtistique(String titre, String description, float prix, int etat, int idArtiste, int idCategorie, int idMusee, int acceptation) {
+    public OeuvreArtistique() {
+    }
+
+    public OeuvreArtistique(String titre, String description, float prix, int etat, int idArtiste, int idCategorie, int idMusee, int acceptation, byte[] image) {
         this.titre = titre;
         this.description = description;
         this.prix = prix;
@@ -23,9 +28,10 @@ public class OeuvreArtistique {
         this.idCategorie = idCategorie;
         this.idMusee=idMusee;
         this.acceptation=acceptation;
+        this.image=image;
     }
 
-    public OeuvreArtistique(int id, String titre, String description, float prix, Date dateCreation, int etat, int idArtiste, int idCategorie, int idMusee, int acceptation) {
+    public OeuvreArtistique(int id, String titre, String description, float prix, Date dateCreation, int etat, int idArtiste, int idCategorie, int idMusee, int acceptation, byte[] image) {
         this.id = id;
         this.titre = titre;
         this.description = description;
@@ -36,6 +42,7 @@ public class OeuvreArtistique {
         this.idCategorie = idCategorie;
         this.idMusee=idMusee;
         this.acceptation=acceptation;
+        this.image=image;
     }
 
     public int getId() {
@@ -78,6 +85,10 @@ public class OeuvreArtistique {
         return acceptation;
     }
 
+    public byte[] getImage() {
+        return image;
+    }
+
     public void setId(int id) {
         this.id = id;
     }
@@ -118,6 +129,10 @@ public class OeuvreArtistique {
         this.acceptation = acceptation;
     }
 
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+
     @Override
     public String toString() {
         return "OeuvreArtistique{" +
@@ -131,6 +146,7 @@ public class OeuvreArtistique {
                 ", idCategorie=" + idCategorie +
                 ", idMusee=" + idMusee +
                 ", acceptation=" + acceptation +
+                ", image=" + Arrays.toString(image) +
                 '}';
     }
 }

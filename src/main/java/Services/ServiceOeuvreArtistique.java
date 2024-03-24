@@ -3,10 +3,7 @@ package Services;
 import Entités.OeuvreArtistique;
 import Util.DataSource;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,20 +13,21 @@ public class ServiceOeuvreArtistique implements IService<OeuvreArtistique> {
     static Connection con;
     @Override
     public void ajouterOeuvre(OeuvreArtistique oeuvreArtistique) throws SQLException {
-        try{
+        try {
             con = DataSource.getInstance().getCon();
             ste = con.createStatement();
-            String req = "INSERT INTO oeuvreArtistique(titre, description, prix, dateCreation, etat, idArtiste, idCategorie, idMusee, acceptation) VALUES ('" +
-                    oeuvreArtistique.getTitre() + "', '" +
-                    oeuvreArtistique.getDescription() + "', " +
-                    oeuvreArtistique.getPrix() + ", NOW(), " +
-                    oeuvreArtistique.getEtat() + ", " +
-                    oeuvreArtistique.getIdArtiste() + ", " +
-                    oeuvreArtistique.getIdCategorie() + ", " +
-                    oeuvreArtistique.getIdMusee() + ", " +
-                    oeuvreArtistique.getAcceptation() +
-                    ")";
-            ste.executeUpdate(req);
+            String req = "INSERT INTO oeuvreArtistique(titre, description, prix, dateCreation, etat, idArtiste, idCategorie, idMusee, acceptation, image) VALUES (?, ?, ?, NOW(), ?, ?, ?, ?, ?, ?)";
+            PreparedStatement pstmt = con.prepareStatement(req);
+            pstmt.setString(1, oeuvreArtistique.getTitre());
+            pstmt.setString(2, oeuvreArtistique.getDescription());
+            pstmt.setFloat(3, oeuvreArtistique.getPrix());
+            pstmt.setInt(4, oeuvreArtistique.getEtat());
+            pstmt.setInt(5, oeuvreArtistique.getIdArtiste());
+            pstmt.setInt(6, oeuvreArtistique.getIdCategorie());
+            pstmt.setInt(7, oeuvreArtistique.getIdMusee());
+            pstmt.setInt(8, oeuvreArtistique.getAcceptation());
+            pstmt.setBytes(9, oeuvreArtistique.getImage());
+            pstmt.executeUpdate();
             System.out.println("Oeuvre artistique ajoutée avec succès !");
         } catch (SQLException e) {
             throw new SQLException("Erreur lors de l'ajout de l'oeuvre artistique: " + e.getMessage());
@@ -53,9 +51,12 @@ public class ServiceOeuvreArtistique implements IService<OeuvreArtistique> {
             Date dateCreation = resultSet.getDate("dateCreation");
             int idMusee = resultSet.getInt("idMusee");
             int acceptation = resultSet.getInt("acceptation");
-            OeuvreArtistique oeuvre = new OeuvreArtistique(titre, description, prix, etat, idArtiste, idCategorie, idMusee, acceptation );
-            oeuvre.setId(id);
-            oeuvre.setDateCreation(dateCreation);
+            Blob imageBlob = resultSet.getBlob("image");
+            byte[] imageBytes = null;
+            if (imageBlob != null) {
+                imageBytes = imageBlob.getBytes(1, (int) imageBlob.length());
+            }
+            OeuvreArtistique oeuvre = new OeuvreArtistique(id, titre, description, prix, dateCreation, etat, idArtiste, idCategorie, idMusee, acceptation, imageBytes);
             oeuvres.add(oeuvre);
         }
         return oeuvres;
@@ -77,10 +78,12 @@ public class ServiceOeuvreArtistique implements IService<OeuvreArtistique> {
             Date dateCreation = resultSet.getDate("dateCreation");
             int idMusee = resultSet.getInt("idMusee");
             int acceptation = resultSet.getInt("acceptation");
-
-            oeuvre = new OeuvreArtistique(titre, description, prix, etat, idArtiste, idCategorie, idMusee, acceptation);
-            oeuvre.setId(id);
-            oeuvre.setDateCreation(dateCreation);
+            Blob imageBlob = resultSet.getBlob("image");
+            byte[] imageBytes = null;
+            if (imageBlob != null) {
+                imageBytes = imageBlob.getBytes(1, (int) imageBlob.length());
+            }
+            oeuvre = new OeuvreArtistique(id, titre, description, prix, dateCreation, etat, idArtiste, idCategorie, idMusee, acceptation, imageBytes);
         }
         return oeuvre;
     }
@@ -92,7 +95,6 @@ public class ServiceOeuvreArtistique implements IService<OeuvreArtistique> {
         String query = "DELETE FROM oeuvreArtistique WHERE id = " + oeuvreArtistique.getId();
         int rowsAffected = statement.executeUpdate(query);
         statement.close();
-
         if (rowsAffected == 0) {
             System.out.println("L'oeuvre avec l'ID " + oeuvreArtistique.getId() + " n'existe pas dans la base de données.");
         } else {
@@ -102,32 +104,67 @@ public class ServiceOeuvreArtistique implements IService<OeuvreArtistique> {
 
     public void modifierOeuvre(OeuvreArtistique oeuvreArtistique) throws SQLException {
         Connection conn = null;
-        Statement stmt = null;
-
+        PreparedStatement pstmt = null;
         try {
             conn = DataSource.getInstance().getCon();
-            stmt = conn.createStatement();
-            String query = "UPDATE oeuvreArtistique SET titre = '" + oeuvreArtistique.getTitre() +
-                    "', description = '" + oeuvreArtistique.getDescription() +
-                    "', prix = " + oeuvreArtistique.getPrix() +
-                    ", dateCreation = '" + new java.sql.Date(oeuvreArtistique.getDateCreation().getTime()) +
-                    "', Etat = " + oeuvreArtistique.getEtat() +
-                    ", idArtiste = " + oeuvreArtistique.getIdArtiste() +
-                    ", idCategorie = " + oeuvreArtistique.getIdCategorie() +
-                    ", idMusee = " + oeuvreArtistique.getIdMusee() +
-                    ", acceptation = " + oeuvreArtistique.getAcceptation() +
-                    " WHERE id = " + oeuvreArtistique.getId();
-            stmt.executeUpdate(query);
+            String query = "UPDATE oeuvreArtistique SET titre = ?, description = ?, prix = ?, dateCreation = ?, etat = ?, idArtiste = ?, idCategorie = ?, idMusee = ?, acceptation = ?, image = ? WHERE id = ?";
+            pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, oeuvreArtistique.getTitre());
+            pstmt.setString(2, oeuvreArtistique.getDescription());
+            pstmt.setFloat(3, oeuvreArtistique.getPrix());
+            pstmt.setDate(4, new java.sql.Date(oeuvreArtistique.getDateCreation().getTime()));
+            pstmt.setInt(5, oeuvreArtistique.getEtat());
+            pstmt.setInt(6, oeuvreArtistique.getIdArtiste());
+            pstmt.setInt(7, oeuvreArtistique.getIdCategorie());
+            pstmt.setInt(8, oeuvreArtistique.getIdMusee());
+            pstmt.setInt(9, oeuvreArtistique.getAcceptation());
+            pstmt.setBytes(10, oeuvreArtistique.getImage()); // Assurez-vous que getImage() renvoie un tableau de bytes (byte[])
+            pstmt.setInt(11, oeuvreArtistique.getId());
+            pstmt.executeUpdate();
             System.out.println("Mise à jour effectuée avec succès !");
         } catch (SQLException e) {
             System.out.println("Erreur lors de la mise à jour de l'oeuvre artistique : " + e.getMessage());
-        } finally {
-            if (stmt != null) {
-                stmt.close();
+        }
+    }
+    @Override
+    public List<OeuvreArtistique> listerOeuvresParArtiste(int idArtiste) throws SQLException {
+        List<OeuvreArtistique> oeuvres = new ArrayList<>();
+        Connection connection = DataSource.getInstance().getCon();
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            String query = "SELECT * FROM oeuvreArtistique WHERE idArtiste = ?";
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, idArtiste);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String titre = resultSet.getString("titre");
+                String description = resultSet.getString("description");
+                float prix = resultSet.getFloat("prix");
+                int etat = resultSet.getInt("etat");
+                int idCategorie = resultSet.getInt("idCategorie");
+                Date dateCreation = resultSet.getDate("dateCreation");
+                int idMusee = resultSet.getInt("idMusee");
+                int acceptation = resultSet.getInt("acceptation");
+                Blob imageBlob = resultSet.getBlob("image");
+                byte[] imageBytes = null;
+                if (imageBlob != null) {
+                    imageBytes = imageBlob.getBytes(1, (int) imageBlob.length());
+                }
+                OeuvreArtistique oeuvre = new OeuvreArtistique(id, titre, description, prix, dateCreation, etat, idArtiste, idCategorie, idMusee, acceptation, imageBytes);
+                oeuvres.add(oeuvre);
             }
-            if (conn != null) {
-                conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (resultSet != null) {
+                resultSet.close();
+            }
+            if (preparedStatement != null) {
+                preparedStatement.close();
             }
         }
+        return oeuvres;
     }
 }

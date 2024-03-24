@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Category {
 
-    private String Id_category;
+    private int Id_category;
     private String Name;
     private String Description;
     private Date Created_Date;
@@ -17,11 +17,10 @@ public class Category {
         this.Name = Name;
         this.Description = Description;
         this.Created_Date = Created_Date;
-
     }
 
     // Constructor with id (for retrieval and updates)
-    public Category(String Id_category, String Name, String Description , Date Created_Date) {
+    public Category(int Id_category, String Name, String Description , Date Created_Date) {
 
         this.Name = Name;
         this.Description = Description;
@@ -43,7 +42,7 @@ public class Category {
     }
 
     // Getters
-    public String getId_category() {
+    public int getId_category() {
         return Id_category;
     }
 
@@ -61,7 +60,7 @@ public class Category {
 
 
     // Setters
-    public void set(String Id_category) {
+    public void set(int Id_category) {
         this.Id_category = Id_category;
     }
 
