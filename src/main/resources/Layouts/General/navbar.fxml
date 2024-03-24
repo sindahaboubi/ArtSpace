@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ced5d7" height="59.0" layoutX="-3.0" layoutY="-1.0" stroke="#41c9e2" strokeType="INSIDE" width="616.0" />
+        <Label alignment="CENTER" contentDisplay="CENTER" layoutX="308.0" layoutY="16.0" prefHeight="30.0" prefWidth="73.0" style="-fx-font-weight: bold;" text="A propos" underline="true">
+            <cursor>
+                <Cursor fx:constant="DEFAULT" />
+            </cursor>
+        </Label>
+        <Label alignment="CENTER" contentDisplay="CENTER" layoutX="495.0" layoutY="17.0" prefHeight="30.0" prefWidth="103.0" style="-fx-font-weight: bold;" text="Me déconnecter" underline="true">
+            <cursor>
+                <Cursor fx:constant="DEFAULT" />
+            </cursor>
+        </Label>
+        <Label alignment="CENTER" contentDisplay="CENTER" layoutX="221.0" layoutY="16.0" prefHeight="30.0" prefWidth="73.0" style="-fx-font-weight: bold;" text="Accueil" underline="true">
+            <cursor>
+                <Cursor fx:constant="DEFAULT" />
+            </cursor>
+        </Label>
+        <Label alignment="CENTER" contentDisplay="CENTER" layoutX="402.0" layoutY="16.0" prefHeight="30.0" prefWidth="73.0" style="-fx-font-weight: bold;" text="Mon compte" underline="true">
+            <cursor>
+                <Cursor fx:constant="DEFAULT" />
+            </cursor>
+        </Label>
+        <ImageView fitHeight="59.0" fitWidth="79.0" layoutX="4.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@../../../../../../Downloads/logo.png" />
+            </image>
+        </ImageView>
+        <ImageView fx:id="image" fitHeight="78.0" fitWidth="127.0" layoutX="317.0" layoutY="230.0" pickOnBounds="true" preserveRatio="true" />
+        <Label fx:id="imageErrorLabel" layoutX="419.0" layoutY="290.0" prefHeight="17.0" prefWidth="149.0" text="Ce champ est obligatoire" textFill="RED" visible="false" />
+        <Label fx:id="descriptionErrorLabel" layoutX="159.0" layoutY="290.0" prefHeight="17.0" prefWidth="149.0" text="Ce champ est obligatoire" textFill="RED" visible="false" />
+        <Label fx:id="prixErrorLabel" layoutX="421.0" layoutY="182.0" prefHeight="17.0" prefWidth="149.0" text="Ce champ est obligatoire" textFill="RED" visible="false" />
+        <Label fx:id="titreErrorLabel" layoutX="159.0" layoutY="182.0" prefHeight="17.0" prefWidth="149.0" text="Ce champ est obligatoire" textFill="RED" visible="false" />
+    </children>
+</AnchorPane>
